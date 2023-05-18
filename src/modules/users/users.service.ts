@@ -19,4 +19,8 @@ export class UsersService {
       type
     })
   }
+
+  async list() {
+    return await this.userRepository.findAll({})
+  }
 }
