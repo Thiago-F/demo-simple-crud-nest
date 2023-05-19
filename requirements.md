@@ -4,7 +4,6 @@ Crud App - NestJs - Requirements
 ---
 
 [] - crud de usuários
-    [] - user admin
     [] - user não admin
 [] - crud de categorias
 [] - crud de produtos

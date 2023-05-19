@@ -3,6 +3,9 @@
 /node_modules
 /mongodb-backup
 
+# Environments files
+.env
+
 # Logs
 logs
 *.log

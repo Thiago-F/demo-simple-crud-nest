@@ -5,4 +5,8 @@ export class EncryptAdapter {
     async hash(value: string): Promise<string> {
         return await bcrypt.hash(value, SALT_ROUNDS)
     }
+
+    async compare(password, encryptedPassword) {
+        return await bcrypt.compare(password, encryptedPassword)
+    }
 }
