@@ -1,9 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/modules/prisma/prisma.service";
 
-
-const users = []
-
 @Injectable()
 export class UserRepository {
 
@@ -26,6 +23,6 @@ export class UserRepository {
     }
 
     async findAll(args: any) {
-        return users
+        return this.prisma.user.findMany(args)
     }
 }
