@@ -2,18 +2,22 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/modules/prisma/prisma.service";
 
 @Injectable()
-export class CategoriesRepository {
+export class ProductRepository {
     constructor(
         private readonly prisma: PrismaService,
     ) { }
 
     async create({
         name,
+        valueInCents,
+        categoryId,
         createdBy
     }) {
-        return await this.prisma.category.create({
+        return await this.prisma.product.create({
             data: {
                 name,
+                valueInCents,
+                categoryId,
                 createdBy,
                 updatedBy: createdBy
             }
@@ -21,10 +25,10 @@ export class CategoriesRepository {
     }
 
     async findAll(args) {
-        return await this.prisma.category.findMany(args)
+        return await this.prisma.product.findMany(args)
     }
 
     async findOne(args) {
-        return await this.prisma.category.findFirst(args)
+        return await this.prisma.product.findFirst(args)
     }
 }
