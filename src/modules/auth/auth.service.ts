@@ -4,14 +4,6 @@ import { EncryptAdapter } from 'src/infra/bcryptAdapter';
 
 import { JwtService } from '@nestjs/jwt';
 
-class SignUpDto {
-    name: string;
-    email: string;
-    phone: string;
-    password: string;
-    passwordConfirmation: string;
-}
-
 @Injectable()
 export class AuthService {
     constructor(
@@ -21,14 +13,11 @@ export class AuthService {
     ) { }
 
     async validateUser(email: string, pass: string): Promise<any> {
-        console.log('validate?')
         const user = await this.userRepository.findOne({
             where: {
                 email
             }
         });
-
-        console.log('user validate', user)
 
         if (!user) {
             return null;
@@ -70,8 +59,6 @@ export class AuthService {
     }
 
     async login({ data, user }) {
-        console.log('data, user', data, user)
-
         const payload = {
             sub: user.id,
             email: user.email,

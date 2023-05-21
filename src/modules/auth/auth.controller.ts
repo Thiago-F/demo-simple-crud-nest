@@ -1,6 +1,5 @@
 import { Body, Controller, HttpCode, HttpStatus, Post, Req, SetMetadata, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthGuard } from '@nestjs/passport'
 import { LocalAuthGuard } from './guards/local.guard';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 
@@ -12,12 +11,6 @@ class SignUpDto {
   password: string;
   passwordConfirmation: string;
 }
-
-class LoginDto {
-  email: string;
-  password: string;
-}
-
 
 export const IS_PUBLIC_KEY = 'isPublic';
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
@@ -44,8 +37,6 @@ export class AuthController {
     @Body() data: any,
     @Req() request
   ) {
-    console.log('in', data, request.user)
-
     const { access_token } = await this.authService.login({
       data,
       user: request.user
