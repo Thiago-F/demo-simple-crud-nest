@@ -21,7 +21,13 @@ export class CategoriesRepository {
     }
 
     async findAll(args) {
-        return await this.prisma.category.findMany(args)
+        return await this.prisma.category.findMany({
+            where: {
+                name: {
+                    contains: ''
+                }
+            }
+        })
     }
 
     async findOne(args) {

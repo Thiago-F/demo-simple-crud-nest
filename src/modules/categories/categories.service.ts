@@ -30,10 +30,10 @@ export class CategoriesService {
     })
 
     if (category) {
-      throw new UnauthorizedException('Already exists')
+      throw new UnauthorizedException('Category already exists')
     }
 
-    await this.categoriesRepository.create({
+    return await this.categoriesRepository.create({
       name,
       createdBy: user.id
     })
@@ -45,7 +45,9 @@ export class CategoriesService {
 
     return await this.categoriesRepository.findAll({
       where: {
-        name,
+        name: {
+          contains: name
+        },
         deletedAt: null
       }
     })
