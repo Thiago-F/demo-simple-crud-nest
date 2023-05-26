@@ -3,6 +3,7 @@ import { UserRepository } from '../../data/repositories/user-repository';
 import { EncryptAdapter } from '../../infra/bcryptAdapter';
 
 import { JwtService } from '@nestjs/jwt';
+import { SignUpDto } from './dto/signup.dto';
 
 @Injectable()
 export class AuthService {
@@ -33,7 +34,7 @@ export class AuthService {
         return result;
     }
 
-    async signUp({ data }: { data: any }) {
+    async signUp({ data }: { data: SignUpDto }) {
         const {
             name,
             email,

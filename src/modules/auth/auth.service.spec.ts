@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { UserRepository } from '../../data/repositories/user-repository';
 import { EncryptAdapter } from '../../infra/bcryptAdapter';
 import { JwtService } from '@nestjs/jwt';
-import { UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, UnauthorizedException } from '@nestjs/common';
 import { UserEntity } from '../users/entities/user.entity';
 
 const makeFakeUser = (): UserEntity => ({
@@ -15,6 +15,7 @@ const makeFakeUser = (): UserEntity => ({
 describe('AuthService', () => {
   let sut: AuthService;
   let encryptAdapter: EncryptAdapter;
+  let jwtService: JwtService;
   let userRepository: UserRepository;
 
   beforeEach(async () => {
@@ -25,20 +26,20 @@ describe('AuthService', () => {
           provide: UserRepository,
           useValue: {
             findOne: jest.fn().mockResolvedValue(makeFakeUser()),
-            create: jest.fn()
+            create: jest.fn().mockResolvedValue(makeFakeUser()),
           }
         },
         {
           provide: EncryptAdapter,
           useValue: {
             compare: jest.fn().mockResolvedValue(true),
-            hash: jest.fn()
+            hash: jest.fn().mockResolvedValue('hashed_value')
           }
         },
         {
           provide: JwtService,
           useValue: {
-            sign: jest.fn()
+            sign: jest.fn().mockReturnValue('any_token')
           }
         }
       ],
@@ -46,6 +47,7 @@ describe('AuthService', () => {
 
     sut = module.get<AuthService>(AuthService);
     encryptAdapter = module.get<EncryptAdapter>(EncryptAdapter);
+    jwtService = module.get<JwtService>(JwtService);
     userRepository = module.get<UserRepository>(UserRepository);
   });
 
@@ -71,6 +73,92 @@ describe('AuthService', () => {
       expect(result).toEqual({
         ...makeFakeUser(),
         password: undefined
+      })
+    });
+  });
+
+  describe('signUp', () => {
+    it('should throw if password does not match', async () => {
+      const promise = sut.signUp({
+        data: {
+          name: 'any_name',
+          email: 'any_email@mail.com',
+          password: 'any_password',
+          passwordConfirmation: 'different_password',
+          phone: 'any_phone'
+        }
+      })
+
+      await expect(promise).rejects.toThrowError(new BadRequestException('password does not match with confirm password'))
+    });
+
+    it('should call userRepository.create with correct values', async () => {
+
+      const createSpy = jest.spyOn(userRepository, 'create')
+
+      await sut.signUp({
+        data: {
+          name: 'any_name',
+          email: 'any_email@mail.com',
+          password: 'any_password',
+          passwordConfirmation: 'any_password',
+          phone: 'any_phone'
+        }
+      })
+
+      expect(createSpy).toHaveBeenCalledWith({
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'hashed_value',
+        phone: 'any_phone'
+      })
+    });
+
+    it('should return a user entity on success', async () => {
+      const result = await sut.signUp({
+        data: {
+          name: 'any_name',
+          email: 'any_email@mail.com',
+          password: 'any_password',
+          passwordConfirmation: 'any_password',
+          phone: 'any_phone'
+        }
+      })
+
+      expect(result).toEqual(makeFakeUser())
+    });
+  });
+
+  describe('login', () => {
+    it('should call jwtService.sign with correct payload', async () => {
+      const signSpy = jest.spyOn(jwtService, 'sign')
+
+      await sut.login({
+        data: {
+          email: 'any_email@mail.com',
+          password: 'any_password'
+        },
+        user: makeFakeUser()
+      })
+
+      expect(signSpy).toHaveBeenCalledWith({
+        sub: makeFakeUser().id,
+        email: makeFakeUser().email,
+        name: makeFakeUser().name
+      })
+    });
+
+    it('should return a access_token on success', async () => {
+      const result = await sut.login({
+        data: {
+          email: 'any_email@mail.com',
+          password: 'any_password'
+        },
+        user: makeFakeUser()
+      })
+
+      expect(result).toEqual({
+        access_token: 'any_token'
       })
     });
   });
