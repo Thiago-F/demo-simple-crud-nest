@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { UserEntity } from '../users/entities/user.entity';
-import { CategoriesRepository } from 'src/data/repositories/category-repository';
+import { CategoriesRepository } from '../../data/repositories/category-repository';
 
 interface CreateDto {
   data: CreateCategoryDto,

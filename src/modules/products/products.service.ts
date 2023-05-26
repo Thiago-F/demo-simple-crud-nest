@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CategoriesRepository } from 'src/data/repositories/category-repository';
-import { ProductRepository } from 'src/data/repositories/product-repository';
+import { CategoriesRepository } from '../../data/repositories/category-repository';
+import { ProductRepository } from '../../data/repositories/product-repository';
 
 @Injectable()
 export class ProductsService {
@@ -10,7 +10,6 @@ export class ProductsService {
     ) { }
 
     async create({ data, user }) {
-
         const { name, valueInCents, categoryId } = data
 
         // check if category is valid

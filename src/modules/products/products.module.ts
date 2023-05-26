@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { ProductsController } from './products.controller';
 import { PrismaModule } from '../prisma/prisma.module';
-import { ProductRepository } from 'src/data/repositories/product-repository';
-import { CategoriesRepository } from 'src/data/repositories/category-repository';
+import { ProductRepository } from '../../data/repositories/product-repository';
+import { CategoriesRepository } from '../../data/repositories/category-repository';
 
 @Module({
   imports: [PrismaModule],

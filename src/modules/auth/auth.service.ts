@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
-import { UserRepository } from 'src/data/repositories/user-repository';
-import { EncryptAdapter } from 'src/infra/bcryptAdapter';
+import { UserRepository } from '../../data/repositories/user-repository';
+import { EncryptAdapter } from '../../infra/bcryptAdapter';
 
 import { JwtService } from '@nestjs/jwt';
 
