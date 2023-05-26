@@ -21,7 +21,8 @@ describe('AuthController', () => {
         {
           provide: AuthService,
           useValue: {
-            signUp: jest.fn().mockResolvedValue(makeFakeUser())
+            signUp: jest.fn().mockResolvedValue(makeFakeUser()),
+            login: jest.fn().mockResolvedValue({ access_token: 'any_token' }),
           }
         }
       ],
@@ -68,6 +69,44 @@ describe('AuthController', () => {
       })
 
       expect(result).toEqual(makeFakeUser())
+    });
+  });
+
+  describe('login', () => {
+    it('should call authService.login with correct values', async () => {
+      const loginSpy = jest.spyOn(authService, 'login')
+
+      await sut.login(
+        {
+          email: 'any_email@mail.com',
+          password: 'any_password'
+        },
+        {
+          user: makeFakeUser()
+        }
+      )
+
+      expect(loginSpy).toHaveBeenCalledWith({
+        data: {
+          email: 'any_email@mail.com',
+          password: 'any_password'
+        },
+        user: makeFakeUser()
+      })
+    });
+
+    it('should return a token on success', async () => {
+      const response = await sut.login(
+        {
+          email: 'any_email@mail.com',
+          password: 'any_password'
+        },
+        {
+          user: makeFakeUser()
+        }
+      )
+
+      expect(response).toEqual({ access_token: 'any_token' })
     });
   });
 });
