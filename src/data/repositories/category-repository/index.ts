@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../../modules/prisma/prisma.service";
+import { CategoryEntity } from "src/data/entities/category.entity";
 
 @Injectable()
 export class CategoriesRepository {
@@ -10,7 +11,7 @@ export class CategoriesRepository {
     async create({
         name,
         createdBy
-    }) {
+    }): Promise<CategoryEntity> {
         return await this.prisma.category.create({
             data: {
                 name,
@@ -20,7 +21,7 @@ export class CategoriesRepository {
         })
     }
 
-    async findAll(args) {
+    async findAll(args): Promise<CategoryEntity[]> {
         return await this.prisma.category.findMany({
             where: {
                 name: {
@@ -30,7 +31,7 @@ export class CategoriesRepository {
         })
     }
 
-    async findOne(args) {
+    async findOne(args): Promise<CategoryEntity> {
         return await this.prisma.category.findFirst(args)
     }
 }

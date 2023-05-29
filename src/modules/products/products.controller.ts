@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Post, Query, Req, Request, UseGuards } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { AuthGuard } from '@nestjs/passport';
+import { CreateProductDto } from './dto/create-product.dto';
 
 @Controller('products')
 @UseGuards(AuthGuard('jwt'))
@@ -9,7 +10,7 @@ export class ProductsController {
 
   @Post()
   async create(
-    @Body() data,
+    @Body() data: CreateProductDto,
     @Req() request
   ) {
     return await this.productsService.create({
@@ -26,7 +27,10 @@ export class ProductsController {
     const { name, categoryId } = query
 
     return await this.productsService.listAll({
-      filters: { name, categoryId },
+      filters: {
+        name,
+        categoryId
+      },
       user: request.user
     })
   }
