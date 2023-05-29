@@ -27,6 +27,10 @@ export class UserRepository {
         return this.removePasswordField(user)
     }
 
+    async findOneWithPassword(args: any): Promise<UserEntity> {
+        return await this.prisma.user.findUnique(args)
+    }
+
     async findAll(args: any): Promise<Omit<UserEntity, 'password'>[]> {
         const users = await this.prisma.user.findMany(args)
         return users.map(user => this.removePasswordField(user))

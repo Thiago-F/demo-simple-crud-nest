@@ -6,12 +6,12 @@ import { UserEntity } from '../../data/entities/user.entity';
 
 interface CreateDto {
     data: CreateProductDto,
-    user: UserEntity
+    user: Omit<UserEntity, 'password'>
 }
 
 interface ListDto {
-    filters: { name: string, categoryId: string },
-    user: UserEntity
+    filters: { name?: string, categoryId?: string },
+    user: Omit<UserEntity, 'password'>
 }
 
 @Injectable()

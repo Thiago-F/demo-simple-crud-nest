@@ -6,11 +6,11 @@ import { CategoriesRepository } from '../../data/repositories/category-repositor
 
 interface CreateDto {
   data: CreateCategoryDto,
-  user: UserEntity
+  user: Omit<UserEntity, 'password'>
 }
 interface ListDto {
-  filters: any,
-  user: UserEntity
+  filters: { name: string },
+  user: Omit<UserEntity, 'password'>
 }
 
 @Injectable()

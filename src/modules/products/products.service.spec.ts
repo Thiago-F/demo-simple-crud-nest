@@ -5,11 +5,12 @@ import { CategoriesRepository } from '../../data/repositories/category-repositor
 import { UserEntity } from '../../data/entities/user.entity';
 import { NotFoundException } from '@nestjs/common';
 
-const makeFakeUser = (): UserEntity => ({
-  id: 1,
-  name: 'any_name',
-  email: 'any_email@mail.com'
-} as UserEntity)
+import { makeFakeUser, makeFakeProduct, makeFakeCategory } from '../../../test/factories'
+
+const expectedCreateProduct = makeFakeProduct()
+const expectedFindAllProduct = [makeFakeProduct(), makeFakeProduct()]
+
+const expectedFindOneCategory = makeFakeCategory()
 
 describe('ProductsService', () => {
   let sut: ProductsService;
@@ -23,14 +24,14 @@ describe('ProductsService', () => {
         {
           provide: ProductRepository,
           useValue: {
-            create: jest.fn().mockResolvedValue({ id: 3 }),
-            findAll: jest.fn().mockResolvedValue([{ id: 2 }, { id: 4 }]),
+            create: jest.fn().mockResolvedValue(expectedCreateProduct),
+            findAll: jest.fn().mockResolvedValue(expectedFindAllProduct),
           }
         },
         {
           provide: CategoriesRepository,
           useValue: {
-            findOne: jest.fn().mockResolvedValue({ id: 1 })
+            findOne: jest.fn().mockResolvedValue(expectedFindOneCategory)
           }
         }
       ],
@@ -54,7 +55,7 @@ describe('ProductsService', () => {
           name: 'any_name',
           valueInCents: 10000,
           categoryId: 1
-        },
+        }, 
         user: makeFakeUser()
       })
 
@@ -63,6 +64,7 @@ describe('ProductsService', () => {
 
     it('should call repository with correct values', async () => {
       const createSpy = jest.spyOn(productRepository, 'create')
+      const user = makeFakeUser()
 
       await sut.create({
         data: {
@@ -70,14 +72,14 @@ describe('ProductsService', () => {
           valueInCents: 10000,
           categoryId: 1
         },
-        user: makeFakeUser()
+        user
       })
 
       expect(createSpy).toHaveBeenCalledWith({
         name: 'any_name',
         valueInCents: 10000,
         categoryId: 1,
-        createdBy: makeFakeUser().id
+        createdBy: user.id
       })
     });
 
@@ -91,16 +93,16 @@ describe('ProductsService', () => {
         user: makeFakeUser()
       })
 
-      expect(result).toEqual({ id: 3 })
+      expect(result).toEqual(expectedCreateProduct)
     });
-  });
+  }); 
 
   describe('listAll', () => {
     it('should call repository with filters', async () => {
       const findAllSpy = jest.spyOn(productRepository, 'findAll')
 
       await sut.listAll({
-        filters: { name: 'any_name', categoryId: 3 },
+        filters: { name: 'any_name', categoryId: '3' },
         user: makeFakeUser()
       })
 
@@ -113,7 +115,7 @@ describe('ProductsService', () => {
           categoryId: 3
         }
       })
-    });
+    }); 
 
     it('should call repository without filters', async () => {
       const findAllSpy = jest.spyOn(productRepository, 'findAll')

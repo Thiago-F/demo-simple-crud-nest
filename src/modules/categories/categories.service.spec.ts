@@ -1,20 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CategoriesService } from './categories.service';
 import { CategoriesRepository } from '../../data/repositories/category-repository';
-import { UserEntity } from '../../data/entities/user.entity';
 import { UnauthorizedException } from '@nestjs/common';
-import { CategoryEntity } from '../../data/entities/category.entity';
+import { makeFakeUser, makeFakeCategory } from '../../../test/factories'
 
-const makeFakeUser = (): UserEntity => ({
-  id: 1,
-  name: 'any_name',
-  email: 'any_email@mail.com'
-} as UserEntity)
-
-const makeFakeCategory = (): CategoryEntity => ({
-  id: 1,
-  name: 'any_name'
-} as CategoryEntity)
+const createCategoryReturn = makeFakeCategory()
+const findAllCategoryReturn = [makeFakeCategory(), makeFakeCategory()]
+const findOneCategoryReturn = makeFakeCategory()
 
 describe('CategoriesService', () => {
   let sut: CategoriesService;
@@ -27,9 +19,9 @@ describe('CategoriesService', () => {
         {
           provide: CategoriesRepository,
           useValue: {
-            findOne: jest.fn().mockResolvedValue(makeFakeCategory()),
-            create: jest.fn().mockResolvedValue(makeFakeCategory()),
-            findAll: jest.fn().mockResolvedValue([makeFakeCategory(), makeFakeCategory()]),
+            create: jest.fn().mockResolvedValue(createCategoryReturn),
+            findOne: jest.fn().mockResolvedValue(findOneCategoryReturn),
+            findAll: jest.fn().mockResolvedValue(findAllCategoryReturn),
           }
         }
       ],
@@ -65,7 +57,7 @@ describe('CategoriesService', () => {
         user: makeFakeUser()
       })
 
-      expect(result).toEqual(makeFakeCategory())
+      expect(result).toEqual(createCategoryReturn)
     });
   });
 
@@ -98,7 +90,7 @@ describe('CategoriesService', () => {
         user: makeFakeUser()
       })
 
-      expect(result).toEqual([makeFakeCategory(), makeFakeCategory()])
+      expect(result).toEqual(findAllCategoryReturn)
     });
   });
 
@@ -119,7 +111,7 @@ describe('CategoriesService', () => {
     it('should return a entity on success', async () => {
       const result = await sut.findOne({ id: 1 })
 
-      expect(result).toEqual(makeFakeCategory())
+      expect(result).toEqual(findOneCategoryReturn)
     });
   });
 });

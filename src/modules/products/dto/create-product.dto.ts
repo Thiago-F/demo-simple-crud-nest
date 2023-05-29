@@ -1,5 +1,5 @@
 export class CreateProductDto {
     name: string;
-    valueInCents: string;
+    valueInCents: number;
     categoryId: number;
 }

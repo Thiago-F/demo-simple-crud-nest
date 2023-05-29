@@ -2,13 +2,16 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { UserEntity } from '../../data/entities/user.entity';
+import { makeFakeUser } from '../../../test/factories'
 
 
-const makeFakeUser = (): UserEntity => ({
-  id: 1,
-  name: 'any_name',
-  email: 'any_email@mail.com'
-} as UserEntity)
+// const makeFakeUser = (): UserEntity => ({
+//   id: 1,
+//   name: 'any_name',
+//   email: 'any_email@mail.com'
+// } as UserEntity)
+
+const expectedSignUpUser = makeFakeUser()
 
 describe('AuthController', () => {
   let sut: AuthController;
@@ -21,7 +24,7 @@ describe('AuthController', () => {
         {
           provide: AuthService,
           useValue: {
-            signUp: jest.fn().mockResolvedValue(makeFakeUser()),
+            signUp: jest.fn().mockResolvedValue(expectedSignUpUser),
             login: jest.fn().mockResolvedValue({ access_token: 'any_token' }),
           }
         }
@@ -68,13 +71,14 @@ describe('AuthController', () => {
         phone: 'any_phone'
       })
 
-      expect(result).toEqual(makeFakeUser())
+      expect(result).toEqual(expectedSignUpUser)
     });
   });
 
   describe('login', () => {
     it('should call authService.login with correct values', async () => {
       const loginSpy = jest.spyOn(authService, 'login')
+      const user = makeFakeUser()
 
       await sut.login(
         {
@@ -82,7 +86,7 @@ describe('AuthController', () => {
           password: 'any_password'
         },
         {
-          user: makeFakeUser()
+          user
         }
       )
 
@@ -91,7 +95,7 @@ describe('AuthController', () => {
           email: 'any_email@mail.com',
           password: 'any_password'
         },
-        user: makeFakeUser()
+        user
       })
     });
 

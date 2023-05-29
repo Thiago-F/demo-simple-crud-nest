@@ -2,13 +2,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ProductsController } from './products.controller';
 import { ProductsService } from './products.service';
 import { UserEntity } from '../../data/entities/user.entity';
+import { makeFakeUser } from '../../../test/factories'
 
-
-const makeFakeUser = (): UserEntity => ({
-  id: 1,
-  name: 'any_name',
-  email: 'any_email@mail.com'
-} as UserEntity)
+// const makeFakeUser = (): UserEntity => ({
+//   id: 1,
+//   name: 'any_name',
+//   email: 'any_email@mail.com'
+// } as UserEntity)
 
 describe('ProductsController', () => {
   let sut: ProductsController;
@@ -22,7 +22,7 @@ describe('ProductsController', () => {
           provide: ProductsService,
           useValue: {
             create: jest.fn(),
-            listAll: jest.fn(),
+            listAll: jest.fn(), 
           }
         }
       ],
@@ -39,6 +39,7 @@ describe('ProductsController', () => {
   describe('create', () => {
     it('should call service with correct values', async () => {
       const createSpy = jest.spyOn(productsService, 'create')
+      const user = makeFakeUser()
 
       await sut.create(
         {
@@ -47,7 +48,7 @@ describe('ProductsController', () => {
           categoryId: 1
         },
         {
-          user: makeFakeUser()
+          user
         }
       )
 
@@ -57,7 +58,7 @@ describe('ProductsController', () => {
           valueInCents: 10000,
           categoryId: 1
         },
-        user: makeFakeUser()
+        user
       })
     });
   });
@@ -65,23 +66,25 @@ describe('ProductsController', () => {
   describe('list', () => {
     it('should call service with correct values', async () => {
       const listSpy = jest.spyOn(productsService, 'listAll')
+      const user = makeFakeUser()
 
-      await sut.list({}, { user: makeFakeUser() })
+      await sut.list({}, { user })
 
       expect(listSpy).toHaveBeenCalledWith({
         filters: {},
-        user: makeFakeUser()
+        user
       })
     });
 
     it('should call service with correct values and filters', async () => {
       const listSpy = jest.spyOn(productsService, 'listAll')
+      const user = makeFakeUser()
 
-      await sut.list({ name: 'any_name' }, { user: makeFakeUser() })
+      await sut.list({ name: 'any_name' }, { user })
 
       expect(listSpy).toHaveBeenCalledWith({
         filters: { name: 'any_name' },
-        user: makeFakeUser()
+        user
       })
     });
   });

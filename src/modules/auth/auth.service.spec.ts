@@ -26,6 +26,7 @@ describe('AuthService', () => {
           provide: UserRepository,
           useValue: {
             findOne: jest.fn().mockResolvedValue(makeFakeUser()),
+            findOneWithPassword: jest.fn().mockResolvedValue(makeFakeUser()),
             create: jest.fn().mockResolvedValue(makeFakeUser()),
           }
         },
@@ -57,7 +58,7 @@ describe('AuthService', () => {
 
   describe('validateUser', () => {
     it('should return null if user does not found', async () => {
-      jest.spyOn(userRepository, 'findOne').mockResolvedValueOnce(null)
+      jest.spyOn(userRepository, 'findOneWithPassword').mockResolvedValueOnce(null)
       const result = await sut.validateUser('any_email@mail.com', 'any_password')
       expect(result).toBeNull()
     });
