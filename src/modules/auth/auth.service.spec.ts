@@ -4,7 +4,7 @@ import { UserRepository } from '../../data/repositories/user-repository';
 import { EncryptAdapter } from '../../infra/bcryptAdapter';
 import { JwtService } from '@nestjs/jwt';
 import { BadRequestException, UnauthorizedException } from '@nestjs/common';
-import { UserEntity } from '../users/entities/user.entity';
+import { UserEntity } from '../../data/entities/user.entity';
 
 const makeFakeUser = (): UserEntity => ({
   id: 1,

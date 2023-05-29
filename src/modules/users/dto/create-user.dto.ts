@@ -1,4 +1,4 @@
-import { UserEntity } from '../entities/user.entity';
+import { UserEntity } from '../../../data/entities/user.entity';
 import {
     IsEmail,
     IsString,

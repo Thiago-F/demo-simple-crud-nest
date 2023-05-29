@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ProductsService } from './products.service';
 import { ProductRepository } from '../../data/repositories/product-repository';
 import { CategoriesRepository } from '../../data/repositories/category-repository';
-import { UserEntity } from '../users/entities/user.entity';
+import { UserEntity } from '../../data/entities/user.entity';
 import { NotFoundException } from '@nestjs/common';
 
 const makeFakeUser = (): UserEntity => ({

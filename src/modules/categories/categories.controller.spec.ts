@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CategoriesController } from './categories.controller';
 import { CategoriesService } from './categories.service';
-import { UserEntity } from '../users/entities/user.entity';
-import { CategoryEntity } from './entities/category.entity';
+import { UserEntity } from '../../data/entities/user.entity';
+import { CategoryEntity } from '../../data/entities/category.entity';
 
 const makeFakeUser = (): UserEntity => ({
   id: 1,

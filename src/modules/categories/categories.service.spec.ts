@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CategoriesService } from './categories.service';
 import { CategoriesRepository } from '../../data/repositories/category-repository';
-import { UserEntity } from '../users/entities/user.entity';
+import { UserEntity } from '../../data/entities/user.entity';
 import { UnauthorizedException } from '@nestjs/common';
-import { CategoryEntity } from './entities/category.entity';
+import { CategoryEntity } from '../../data/entities/category.entity';
 
 const makeFakeUser = (): UserEntity => ({
   id: 1,

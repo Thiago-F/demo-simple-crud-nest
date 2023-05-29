@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { UserEntity } from '../users/entities/user.entity';
+import { UserEntity } from '../../data/entities/user.entity';
 
 
 const makeFakeUser = (): UserEntity => ({

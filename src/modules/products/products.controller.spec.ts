@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProductsController } from './products.controller';
 import { ProductsService } from './products.service';
-import { UserEntity } from '../users/entities/user.entity';
+import { UserEntity } from '../../data/entities/user.entity';
 
 
 const makeFakeUser = (): UserEntity => ({
