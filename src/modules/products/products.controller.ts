@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Req, Request, UseGuards } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -14,6 +14,19 @@ export class ProductsController {
   ) {
     return await this.productsService.create({
       data,
+      user: request.user
+    })
+  }
+
+  @Get()
+  async list(
+    @Query() query,
+    @Request() request
+  ) {
+    const { name, categoryId } = query
+
+    return await this.productsService.listAll({
+      filters: { name, categoryId },
       user: request.user
     })
   }

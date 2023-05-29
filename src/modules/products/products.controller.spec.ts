@@ -21,7 +21,8 @@ describe('ProductsController', () => {
         {
           provide: ProductsService,
           useValue: {
-            create: jest.fn()
+            create: jest.fn(),
+            listAll: jest.fn(),
           }
         }
       ],
@@ -56,6 +57,30 @@ describe('ProductsController', () => {
           valueInCents: 10000,
           categoryId: 1
         },
+        user: makeFakeUser()
+      })
+    });
+  });
+
+  describe('list', () => {
+    it('should call service with correct values', async () => {
+      const listSpy = jest.spyOn(productsService, 'listAll')
+
+      await sut.list({}, { user: makeFakeUser() })
+
+      expect(listSpy).toHaveBeenCalledWith({
+        filters: {},
+        user: makeFakeUser()
+      })
+    });
+
+    it('should call service with correct values and filters', async () => {
+      const listSpy = jest.spyOn(productsService, 'listAll')
+
+      await sut.list({ name: 'any_name' }, { user: makeFakeUser() })
+
+      expect(listSpy).toHaveBeenCalledWith({
+        filters: { name: 'any_name' },
         user: makeFakeUser()
       })
     });

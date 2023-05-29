@@ -31,4 +31,31 @@ export class ProductsService {
             createdBy: user.id
         })
     }
+
+    async listAll({ filters, user }) {
+        const { name, categoryId } = filters
+        let whereConditions: any = {
+            deletedAt: null,
+        }
+
+        if (name) {
+            whereConditions = {
+                ...whereConditions,
+                name: {
+                    in: name
+                }
+            }
+        }
+
+        if (categoryId) {
+            whereConditions = {
+                ...whereConditions,
+                categoryId
+            }
+        }
+
+        return await this.productRepository.findAll({
+            where: whereConditions
+        })
+    }
 }
